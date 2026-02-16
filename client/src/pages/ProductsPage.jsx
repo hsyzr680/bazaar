@@ -19,7 +19,7 @@ export default function ProductsPage() {
       .catch(() => setCategories([]))
   }, [])
 
-  useEffect(() => {
+  const loadProducts = () => {
     setLoading(true)
     const url = category ? `/api/products?category=${encodeURIComponent(category)}` : '/api/products'
     fetch(url)
@@ -32,7 +32,9 @@ export default function ProductsPage() {
         setProducts([])
         setLoading(false)
       })
-  }, [category])
+  }
+
+  useEffect(loadProducts, [category])
 
   const filtered = products
     .filter(p => !search || p.name?.toLowerCase().includes(search.toLowerCase()))
@@ -101,7 +103,9 @@ export default function ProductsPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20 text-gray-500">
-            <p className="text-xl">لا توجد منتجات</p>
+            <p className="text-xl mb-4">لا توجد منتجات</p>
+            <p className="text-sm mb-4">تأكد أن السيرفر يعمل (المنفذ 3000). لو تستخدم PostgreSQL نفّذ من مجلد server: <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">npm run seed</code></p>
+            <button onClick={loadProducts} className="btn-primary">إعادة المحاولة</button>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -79,18 +79,25 @@ const defaultProducts = [
 ]
 
 function getData() {
-  if (!existsSync(dataPath)) {
-    const initial = { products: [...defaultProducts], orders: [] }
-    writeFileSync(dataPath, JSON.stringify(initial, null, 2))
-    return initial
+  try {
+    if (!existsSync(dataPath)) {
+      const initial = { products: [...defaultProducts], orders: [] }
+      writeFileSync(dataPath, JSON.stringify(initial, null, 2))
+      return initial
+    }
+    const data = JSON.parse(readFileSync(dataPath, 'utf-8'))
+    if (!data || !Array.isArray(data.products) || data.products.length === 0) {
+      const fixed = { products: [...defaultProducts], orders: (data && data.orders) || [] }
+      writeFileSync(dataPath, JSON.stringify(fixed, null, 2))
+      return fixed
+    }
+    return data
+  } catch (e) {
+    console.error('خطأ في قراءة data.json:', e.message)
+    const fallback = { products: [...defaultProducts], orders: [] }
+    try { writeFileSync(dataPath, JSON.stringify(fallback, null, 2)) } catch (_) {}
+    return fallback
   }
-  const data = JSON.parse(readFileSync(dataPath, 'utf-8'))
-  if (!data.products || data.products.length === 0) {
-    data.products = [...defaultProducts]
-    data.orders = data.orders || []
-    writeFileSync(dataPath, JSON.stringify(data, null, 2))
-  }
-  return data
 }
 
 function saveData(data) {
@@ -124,13 +131,13 @@ app.get('/api/products', async (req, res) => {
       if (limit) products = products.slice(0, parseInt(limit))
       return res.json(products)
     }
-    let products = getData().products
+    let products = getData().products || []
     if (category) products = products.filter(p => p.category === category)
     if (limit) products = products.slice(0, parseInt(limit))
     res.json(products)
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: err.message })
+    console.error('خطأ في /api/products:', err.message)
+    res.json([])
   }
 })
 

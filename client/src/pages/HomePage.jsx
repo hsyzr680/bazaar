@@ -7,15 +7,25 @@ import { useEffect, useState } from 'react'
 export default function HomePage() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
-  useEffect(() => {
+  const loadProducts = () => {
     setLoading(true)
+    setError(false)
     fetch('/api/products?limit=8')
       .then(res => res.json())
-      .then(data => setProducts(Array.isArray(data) ? data : []))
-      .catch(() => setProducts([]))
+      .then(data => {
+        setProducts(Array.isArray(data) ? data : [])
+        setError(false)
+      })
+      .catch(() => {
+        setProducts([])
+        setError(true)
+      })
       .finally(() => setLoading(false))
-  }, [])
+  }
+
+  useEffect(loadProducts, [])
 
   return (
     <div>
@@ -88,8 +98,17 @@ export default function HomePage() {
             ) : products.length > 0 ? (
               products.map(p => <ProductCard key={p.id} product={p} />)
             ) : (
-              <div className="col-span-full text-center py-12 text-gray-500">
-                <p>لا توجد منتجات حالياً. <Link to="/products" className="text-primary-500 hover:underline">تصفح المتجر</Link></p>
+              <div className="col-span-full text-center py-12 px-4">
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  {error ? 'تعذّر جلب المنتجات. تأكد أن السيرفر يعمل على المنفذ 3000.' : 'لا توجد منتجات حالياً.'}
+                </p>
+                {error && (
+                  <p className="text-sm text-gray-500 mb-4">
+                    من مجلد المشروع: شغّل السيرفر بـ <code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">npm run dev:server</code>
+                  </p>
+                )}
+                <button onClick={loadProducts} className="btn-secondary mr-2">إعادة المحاولة</button>
+                <Link to="/products" className="btn-primary">تصفح المنتجات</Link>
               </div>
             )}
           </div>
