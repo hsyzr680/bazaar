@@ -1,0 +1,20 @@
+{
+  "name": "noor-bazaar",
+  "version": "1.0.0",
+  "description": "نور بازار - متجر إلكتروني متكامل | Full-stack E-commerce",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "build": "cd client && npm run build",
+    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
+    "start": "node server/server.js"
+  },
+  "keywords": ["ecommerce", "نور-بازار", "noor-bazaar"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

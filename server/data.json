@@ -1,0 +1,33 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "سماعات لاسلكية",
+      "price": 25000,
+      "description": "سماعات عالية الجودة",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400"
+    },
+    {
+      "id": "2",
+      "name": "ساعة ذكية",
+      "price": 85000,
+      "description": "ساعة رياضية متطورة",
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400"
+    },
+    {
+      "id": "3",
+      "name": "حافظة جوال",
+      "price": 5000,
+      "description": "حافظة فاخرة",
+      "image": "https://images.unsplash.com/photo-1601598851547-4302969d0614?w=400"
+    },
+    {
+      "id": "4",
+      "name": "شاحن لاسلكي",
+      "price": 15000,
+      "description": "شاحن سريع 20W",
+      "image": "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400"
+    }
+  ],
+  "orders": []
+}
